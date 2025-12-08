@@ -8,6 +8,7 @@
   <script src="https://unpkg.com/feather-icons"></script>
 
   <?php include "../../../include/base-url.php"; ?>
+  <?php include "../../../include/layouts/notification.php"; ?>
 </head>
 
 <body class="bg-gray-100">
@@ -124,7 +125,23 @@
 
     imageInput.addEventListener('change', function() {
       const file = this.files[0];
+
       if (file) {
+        // Validasi nama file: tidak boleh ada spasi
+        if (file.name.includes(' ')) {
+          // Menggunakan notification dari notification.php
+          if (typeof showNotification === 'function') {
+            showNotification("Nama file tidak boleh mengandung spasi. Silakan ganti nama file.", 'error', 4000);
+          } else {
+            alert("Nama file tidak boleh mengandung spasi. Silakan ganti nama file.");
+          }
+
+          this.value = ""; // reset input file
+          imagePreview.src = '#';
+          imagePreview.classList.add('hidden');
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = function(e) {
           imagePreview.src = e.target.result;
@@ -137,6 +154,7 @@
       }
     });
   </script>
+
 
 </body>
 

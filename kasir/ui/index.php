@@ -1,5 +1,6 @@
 <?php
 require "../logic/index.php";
+require "../../include/base-url.php";
 ?>
 
 <!DOCTYPE html>
@@ -64,24 +65,38 @@ require "../logic/index.php";
 
         <h2 class="text-2xl font-semibold text-slate-700 mb-6">Daftar Produk</h2>
         <div class="grid grid-cols-3 gap-6" id="productList">
-
           <?php while ($p = $products->fetch_assoc()): ?>
             <?php if ($p['stock'] <= 0) continue; ?>
+
             <div
               class="product-item h-full rounded-2xl p-5 bg-white border border-slate-200 shadow hover:shadow-xl transition cursor-pointer hover:scale-[1.02]"
               data-name="<?= strtolower($p['name']) ?>"
               onclick="addToCart(<?= $p['id'] ?>, '<?= $p['name'] ?>', <?= $p['price'] ?>)">
 
-              <div class="w-full h-28 bg-slate-100 rounded-xl mb-4 flex items-center justify-center">
-                <span class="text-3xl">👕</span>
+              <div class="w-full h-28 bg-slate-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+                <?php
+                // Path fisik di server
+                $imgPathServer = __DIR__ . '/../../uploads/products/' . basename($p['image']);
+                // Path URL untuk <img>
+                $imgPathUrl = 'uploads/products/' . urlencode(basename($p['image']));
+                ?>
+
+                <?php if ($p['image'] && file_exists($imgPathServer)): ?>
+                  <img src="<?= $imgPathUrl; ?>"
+                    alt="<?= htmlspecialchars($p['name']); ?>"
+                    class="w-full h-full object-cover rounded-xl">
+                <?php else: ?>
+                  <span class="text-3xl">👕</span>
+                <?php endif; ?>
               </div>
 
               <p class="font-semibold text-slate-700 text-lg"><?= $p['name'] ?></p>
-              <p class="text-sm text-slate-500">Rp <?= number_format($p['price']) ?></p>
+              <p class="text-sm text-slate-500">Rp <?= number_format($p['price']); ?></p>
               <p class="text-xs text-slate-400" id="stock-<?= $p['id'] ?>">Stok: <?= $p['stock'] ?></p>
 
             </div>
           <?php endwhile; ?>
+
 
         </div>
       </div>
@@ -90,7 +105,7 @@ require "../logic/index.php";
       <div class="bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-xl border border-slate-200">
         <h2 class="text-2xl font-semibold text-slate-700 mb-6">Keranjang</h2>
 
-        <form action="transaction" method="POST">
+        <form action="kasir/transaction" method="POST">
 
           <table class="w-full text-sm mb-4" id="cartTable">
             <thead>

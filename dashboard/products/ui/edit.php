@@ -23,6 +23,9 @@ $product = $result->fetch_assoc();
   <title>Edit Produk</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/feather-icons"></script>
+
+
+  <?php include "../../../include/layouts/notification.php"; ?>
 </head>
 
 <body class="bg-gray-100">
@@ -116,10 +119,24 @@ $product = $result->fetch_assoc();
       imagePreview.src = oldImage;
     }
 
-    // Preview saat user pilih file baru
+    // Preview saat user pilih file baru & validasi nama file
     imageInput.addEventListener("change", () => {
       const file = imageInput.files[0];
       if (file) {
+        // Validasi nama file: tidak boleh ada spasi
+        if (file.name.includes(' ')) {
+          // Menggunakan notification dari notification.php
+          if (typeof showNotification === 'function') {
+            showNotification("Nama file tidak boleh mengandung spasi. Silakan ganti nama file.", 'error', 4000);
+          } else {
+            alert("Nama file tidak boleh mengandung spasi. Silakan ganti nama file.");
+          }
+
+          imageInput.value = ""; // reset input file
+          imagePreview.src = oldImage ? oldImage : "";
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = e => {
           imagePreview.src = e.target.result;
@@ -155,6 +172,7 @@ $product = $result->fetch_assoc();
       priceRaw.value = raw;
     });
   </script>
+
 
 </body>
 
