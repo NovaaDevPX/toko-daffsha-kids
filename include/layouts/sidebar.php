@@ -1,10 +1,4 @@
-<?php
-// contoh cek role (opsional)
-// if ($_SESSION['role'] !== 'admin') {
-//   header("Location: ../kasir/index.php");
-//   exit;
-// }
-?>
+<?php include "sidebar-active-logic.php"; ?>
 
 <!-- SIDEBAR -->
 <aside class="fixed top-0 left-0 w-64 bg-white border-r border-gray-200 h-full">
@@ -17,25 +11,27 @@
 
       <!-- Dashboard -->
       <li>
-        <a href="dashboard"
-          class="flex items-center gap-3 p-3 text-gray-700 rounded-xl hover:bg-blue-100 hover:text-blue-600 transition">
+        <a href="/toko-daffsha-kids/dashboard"
+          class="flex items-center gap-3 p-3 rounded-xl transition <?php echo isActive('/toko-daffsha-kids/dashboard'); ?>">
           <i data-feather="home" class="w-5"></i>
           <span>Dashboard</span>
         </a>
       </li>
 
+      <!-- Produk -->
       <li>
-        <a href="dashboard/products"
-          class="flex items-center gap-3 p-3 text-gray-700 rounded-xl hover:bg-blue-100 hover:text-blue-600 transition">
+        <a href="/toko-daffsha-kids/dashboard/products"
+          class="flex items-center gap-3 p-3 rounded-xl transition <?php echo isActive('/toko-daffsha-kids/dashboard/products'); ?>">
           <i data-feather="package" class="w-5"></i>
           <span>Produk</span>
         </a>
       </li>
 
+
       <!-- Users -->
       <li>
         <a href="/admin/users/index.php"
-          class="flex items-center gap-3 p-3 text-gray-700 rounded-xl hover:bg-blue-100 hover:text-blue-600 transition">
+          class="flex items-center gap-3 p-3 rounded-xl transition <?php echo isActive('users'); ?>">
           <i data-feather="users" class="w-5"></i>
           <span>Pengguna</span>
         </a>
@@ -44,14 +40,14 @@
       <!-- Laporan -->
       <li>
         <a href="/admin/laporan.php"
-          class="flex items-center gap-3 p-3 text-gray-700 rounded-xl hover:bg-blue-100 hover:text-blue-600 transition">
+          class="flex items-center gap-3 p-3 rounded-xl transition <?php echo isActive('laporan'); ?>">
           <i data-feather="bar-chart-2" class="w-5"></i>
           <span>Laporan</span>
         </a>
       </li>
 
       <!-- Logout -->
-      <li class="">
+      <li>
         <a href="/logout.php"
           class="flex items-center gap-3 p-3 text-gray-600 rounded-xl hover:bg-red-100 hover:text-red-600 transition">
           <i data-feather="log-out" class="w-5"></i>
