@@ -33,7 +33,7 @@
     <!-- FORM FULL WIDTH -->
     <div class="bg-white border rounded-xl shadow p-10">
 
-      <form id="productForm" action="dashboard/products/store" method="POST" class="space-y-6">
+      <form id="productForm" action="dashboard/products/store" method="POST" enctype="multipart/form-data" class="space-y-6">
 
         <!-- Nama Produk -->
         <div>
@@ -46,16 +46,12 @@
         <!-- Harga -->
         <div>
           <label class="block mb-2 text-gray-700 font-medium">Harga</label>
-
           <div class="relative">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 font-medium">Rp</span>
-
             <input type="text" id="priceFormatted" required
               class="w-full pl-12 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="Masukkan harga (contoh: 15.000)">
           </div>
-
-          <!-- Akan diisi otomatis sebelum submit -->
           <input type="hidden" name="price" id="priceRaw">
         </div>
 
@@ -65,6 +61,18 @@
           <input type="number" name="stock" min="0" required
             class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="Masukkan jumlah stok">
+        </div>
+
+        <!-- Gambar Produk -->
+        <div>
+          <label class="block mb-2 text-gray-700 font-medium">Gambar Produk</label>
+          <input type="file" name="image" id="imageInput" accept="image/*"
+            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+
+          <!-- Preview -->
+          <div class="mt-4">
+            <img id="imagePreview" src="#" alt="Preview Gambar" class="hidden w-40 h-40 object-cover rounded-lg border">
+          </div>
         </div>
 
         <!-- Tombol -->
@@ -86,37 +94,47 @@
     const priceRaw = document.getElementById("priceRaw");
     const form = document.getElementById("productForm");
 
-    // Format angka dengan titik ribuan
     function formatRupiah(value) {
       return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
-    // Event: saat mengetik format otomatis
     priceInput.addEventListener("input", () => {
-      // Hanya angka
       let number = priceInput.value.replace(/\D/g, "");
-
       if (number === "") {
         priceInput.value = "";
         return;
       }
-
-      // Format
       priceInput.value = formatRupiah(number);
     });
 
-    // Saat submit
     form.addEventListener("submit", (e) => {
       let raw = priceInput.value.replace(/\./g, "");
-
       if (raw === "" || raw === "0") {
         e.preventDefault();
         alert("Harga tidak boleh kosong atau 0.");
         return;
       }
-
-      // Kirim number asli
       priceRaw.value = raw;
+    });
+  </script>
+
+  <script>
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+
+    imageInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          imagePreview.classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+      } else {
+        imagePreview.src = '#';
+        imagePreview.classList.add('hidden');
+      }
     });
   </script>
 

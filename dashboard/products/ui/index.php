@@ -36,6 +36,7 @@
         <thead>
           <tr class="bg-gray-100 text-left text-gray-700">
             <th class="p-3 font-semibold">#</th>
+            <th class="p-3 font-semibold">Gambar</th>
             <th class="p-3 font-semibold">Nama Produk</th>
             <th class="p-3 font-semibold">Harga</th>
             <th class="p-3 font-semibold">Stok</th>
@@ -52,6 +53,18 @@
             while ($row = $result->fetch_assoc()) { ?>
               <tr class="border-b hover:bg-gray-50 transition">
                 <td class="p-3"><?= $no++; ?></td>
+                <!-- Gambar -->
+                <td class="p-3">
+                  <?php if ($row['image'] && file_exists($_SERVER['DOCUMENT_ROOT'] . '/toko-daffsha-kids/' . $row['image'])): ?>
+                    <img src="<?= $row['image']; ?>"
+                      alt="<?= $row['name']; ?>"
+                      class="w-16 h-16 object-cover rounded-lg border">
+                  <?php else: ?>
+                    <div class="w-16 h-16 flex items-center justify-center bg-gray-100 rounded-lg border text-gray-400">
+                      <span>No Image</span>
+                    </div>
+                  <?php endif; ?>
+                </td>
                 <td class="p-3"><?= $row['name']; ?></td>
                 <td class="p-3">Rp <?= number_format($row['price'], 0, ',', '.'); ?></td>
                 <td class="p-3"><?= $row['stock']; ?></td>
