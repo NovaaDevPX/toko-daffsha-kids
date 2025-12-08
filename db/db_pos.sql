@@ -1,7 +1,3 @@
--- ================================================
--- DATABASE POS APP (Full SQL)
--- ================================================
-
 DROP DATABASE IF EXISTS db_pos;
 CREATE DATABASE db_pos;
 USE db_pos;
@@ -58,6 +54,7 @@ CREATE TABLE transaction_items (
   FOREIGN KEY (transaction_id) REFERENCES transactions(id),
   FOREIGN KEY (product_id) REFERENCES products(id)
 );
+
 
 -- ================================================
 -- OPTIONAL: Dummy Data (boleh hapus kalau tidak perlu)

@@ -30,8 +30,8 @@
 
       <!-- Users -->
       <li>
-        <a href="/admin/users/index.php"
-          class="flex items-center gap-3 p-3 rounded-xl transition <?php echo isActive('users'); ?>">
+        <a href="/toko-daffsha-kids/dashboard/user-managements"
+          class="flex items-center gap-3 p-3 rounded-xl transition <?php echo isActive('/toko-daffsha-kids/dashboard/user-managements'); ?>">
           <i data-feather="users" class="w-5"></i>
           <span>Pengguna</span>
         </a>
