@@ -1,0 +1,27 @@
+RewriteEngine On
+
+# Jika user akses /dashboard maka arahkan ke /dashboard/ui/index.php
+RewriteRule ^dashboard/?$ dashboard/ui/index.php [L]
+
+# Jika mengakses /dashboard/products
+RewriteRule ^dashboard/products/?$ dashboard/products/ui/index.php [L]
+RewriteRule ^dashboard/products/create/?$ dashboard/products/ui/add.php [L]
+RewriteRule ^dashboard/products/store/?$ dashboard/products/logic/store.php [L]
+RewriteRule ^dashboard/products/edit/([0-9]+)/?$ dashboard/products/ui/edit.php?id=$1 [L]
+RewriteRule ^dashboard/products/update/([0-9]+)/?$ dashboard/products/logic/update.php?id=$1 [L]
+RewriteRule ^dashboard/products/delete/([0-9]+)/?$ dashboard/products/logic/delete.php?id=$1 [L]
+
+# Jika user akses /kasir maka arahkan ke /kasir/ui/index.php
+RewriteRule ^kasir/?$ kasir/ui/index.php [L]
+
+# Jika user akses /login maka arahkan ke /login/ui/index.php
+RewriteRule ^login/?$ login/ui/index.php [L]
+
+
+# Jika akses file aslinya / foldernya memang ada, biarkan
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Sisanya fallback ke index.php (opsional)
+RewriteRule ^ index.php [L]
