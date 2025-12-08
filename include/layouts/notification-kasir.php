@@ -3,30 +3,29 @@
 $success = isset($_GET['success']) ? $_GET['success'] : null;
 $error   = isset($_GET['error']) ? $_GET['error'] : null;
 
-// Fungsi ubah kode menjadi pesan
-function getMessage($key)
+// Fungsi ubah kode menjadi pesan khusus kasir
+function getCashierMessage($key)
 {
   $messages = [
-    'updated'   => 'Data berhasil diperbarui!',
-    'added'     => 'Data berhasil ditambahkan!',
-    'deleted'   => 'Data berhasil dihapus!',
-    'failed'    => 'Terjadi kesalahan, silakan coba lagi!',
-    'notfound'  => 'Data tidak ditemukan!',
+    'transaction_success' => '✅ Transaksi berhasil disimpan!',
+    'transaction_failed'  => '❌ Gagal menyimpan transaksi!',
+    'stock_low'           => '⚠ Stok tidak cukup!',
+    'payment_error'       => '❌ Pembayaran kurang atau tidak valid!',
   ];
 
   return isset($messages[$key]) ? $messages[$key] : $key;
 }
 ?>
 
-<div id="notif-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+<div id="notif-cashier-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
 
 <script>
-  function showNotification(message, type = 'success', duration = 3000) {
-    const container = document.getElementById('notif-container');
+  function showCashierNotification(message, type = 'success', duration = 3500) {
+    const container = document.getElementById('notif-cashier-container');
     const notif = document.createElement('div');
 
     notif.className = `notif ${type === 'success' ? 'notif-success' : 'notif-error'}`;
-    notif.textContent = message;
+    notif.innerHTML = message;
 
     // Style
     notif.style.cssText = `
@@ -60,9 +59,9 @@ function getMessage($key)
 
   // Trigger otomatis jika ada success/error
   <?php if ($success): ?>
-    showNotification("<?= getMessage($success); ?>", 'success');
+    showCashierNotification("<?= getCashierMessage($success); ?>", 'success');
   <?php elseif ($error): ?>
-    showNotification("<?= getMessage($error); ?>", 'error');
+    showCashierNotification("<?= getCashierMessage($error); ?>", 'error');
   <?php endif; ?>
 </script>
 

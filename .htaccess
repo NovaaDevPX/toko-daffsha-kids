@@ -13,6 +13,7 @@ RewriteRule ^dashboard/products/delete/([0-9]+)/?$ dashboard/products/logic/dele
 
 # Jika user akses /kasir maka arahkan ke /kasir/ui/index.php
 RewriteRule ^kasir/?$ kasir/ui/index.php [L]
+RewriteRule ^kasir/transaction/?$ kasir/logic/transaction.php [L]
 
 # Jika user akses /login maka arahkan ke /login/ui/index.php
 RewriteRule ^login/?$ login/ui/index.php [L]
