@@ -10,6 +10,7 @@ require "../../include/base-url.php";
   <meta charset="UTF-8">
   <title>Kasir - Toko Daffsha Kids</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     .fade-in {
@@ -138,11 +139,11 @@ require "../../include/base-url.php";
               class="w-full mt-1 p-3 border border-slate-200 rounded-xl bg-slate-100 font-semibold text-slate-700">
           </div>
 
-          <button type="submit"
+          <button type="button"
+            onclick="confirmTransaction()"
             class="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl shadow-lg transition font-semibold text-lg">
-            Simpan Transaksi
+            Lanjutkan Transaksi
           </button>
-
         </form>
       </div>
     </div>
@@ -253,6 +254,46 @@ require "../../include/base-url.php";
           p.style.display = 'block';
         } else {
           p.style.display = 'none';
+        }
+      });
+    }
+  </script>
+
+  <script>
+    function confirmTransaction() {
+      let total = parseInt(document.getElementById("total").value) || 0;
+      let pay = parseInt(document.getElementById("payment").value) || 0;
+
+      if (cart.length === 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Keranjang kosong!',
+          text: 'Tambahkan minimal satu produk.',
+        });
+        return;
+      }
+
+      if (pay < total) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Pembayaran tidak cukup!',
+          text: 'Jumlah pembayaran harus lebih besar atau sama dengan total.',
+        });
+        return;
+      }
+
+      Swal.fire({
+        title: "Lanjutkan transaksi?",
+        text: "Pastikan data sudah benar sebelum melanjutkan.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#16a34a",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, lanjutkan!",
+        cancelButtonText: "Batal"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.querySelector("form").submit();
         }
       });
     }
