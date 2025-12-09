@@ -102,7 +102,11 @@ include "../logic/index.php"; // ambil data dari logic
                 <td class="p-3">Rp <?= number_format($trx['total'], 0, ',', '.'); ?></td>
                 <td class="p-3"><?= ucfirst($trx['method']); ?></td>
                 <td class="p-3">
-                  <a href="transactions/view.php?id=<?= $trx['id']; ?>" class="text-blue-600 hover:underline">Detail</a>
+                  <button
+                    onclick="openDetailModal(<?= $trx['id']; ?>)"
+                    class="text-blue-600 hover:underline font-medium">
+                    Detail
+                  </button>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -161,6 +165,139 @@ include "../logic/index.php"; // ambil data dari logic
   <script>
     feather.replace();
   </script>
+
+  <!-- ============================ -->
+  <!-- MODAL DETAIL TRANSAKSI NEW UI -->
+  <!-- ============================ -->
+  <style>
+    @keyframes fadeSlideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(25px) scale(0.97);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .animate-modal {
+      animation: fadeSlideUp 0.35s ease forwards;
+    }
+
+    /* Scrollbar Stylish */
+    #itemList::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #itemList::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+  </style>
+
+  <div id="detailModal"
+    class="hidden fixed inset-0 bg-black bg-opacity-40 backdrop-blur-md flex items-center justify-center z-50 p-4">
+
+    <div class="bg-white w-full max-w-xl p-7 rounded-3xl shadow-2xl animate-modal relative border border-gray-100">
+
+      <!-- Close Button -->
+      <button onclick="closeDetailModal()"
+        class="absolute top-3 right-3 text-gray-500 hover:text-red-500 transition text-2xl font-bold">
+        ✕
+      </button>
+
+      <h2 class="text-3xl  mb-4 font-bold text-blue-800 tracking-tight">
+        Detail Transaksi
+      </h2>
+
+      <!-- Loading -->
+      <div id="modalLoading" class="hidden">
+        <div class="animate-pulse space-y-3">
+          <div class="h-4 bg-gray-200 rounded"></div>
+          <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div id="modalContent" class="hidden">
+
+        <!-- Transaction Info -->
+        <div class="space-y-2 text-gray-700 mb-5 bg-gray-50 rounded-xl p-4 border border-gray-200">
+          <p><strong>ID Transaksi:</strong> <span id="trxId"></span></p>
+          <p><strong>Tanggal:</strong> <span id="trxDate"></span></p>
+          <p><strong>Kasir:</strong> <span id="trxKasir"></span></p>
+          <p><strong>Metode:</strong> <span id="trxMethod" class="uppercase font-semibold text-indigo-600"></span></p>
+          <p class="text-lg font-bold text-gray-900">
+            Total: <span id="trxTotal"></span>
+          </p>
+        </div>
+
+        <!-- Product List -->
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Daftar Produk</h3>
+
+        <div id="itemList" class="space-y-3 max-h-64 overflow-y-auto pr-2"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function openDetailModal(id) {
+      const modal = document.getElementById("detailModal");
+      const loading = document.getElementById("modalLoading");
+      const content = document.getElementById("modalContent");
+
+      modal.classList.remove("hidden");
+      loading.classList.remove("hidden");
+      content.classList.add("hidden");
+
+      fetch("dashboard/logic/get-transaction.php?id=" + id)
+        .then(res => res.json())
+        .then(data => {
+          loading.classList.add("hidden");
+          content.classList.remove("hidden");
+
+          const trx = data.transaction;
+
+          document.getElementById("trxId").textContent = trx.id;
+          document.getElementById("trxDate").textContent = trx.created_at;
+          document.getElementById("trxKasir").textContent = trx.kasir;
+          document.getElementById("trxMethod").textContent = trx.method;
+          document.getElementById("trxTotal").textContent =
+            "Rp " + parseInt(trx.total).toLocaleString("id-ID");
+
+          let html = "";
+
+          data.items.forEach(item => {
+            html += `
+            <div class="border p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition shadow-sm hover:shadow-md">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="font-semibold text-gray-800 text-lg">${item.product_name}</p>
+                  <p class="text-sm text-gray-600">
+                    ${item.qty} × Rp ${parseInt(item.price).toLocaleString("id-ID")}
+                  </p>
+                </div>
+                <div class="font-bold text-gray-900 text-lg">
+                  Rp ${parseInt(item.subtotal).toLocaleString("id-ID")}
+                </div>
+              </div>
+            </div>
+          `;
+          });
+
+          document.getElementById("itemList").innerHTML = html;
+        });
+    }
+
+    function closeDetailModal() {
+      document.getElementById("detailModal").classList.add("hidden");
+    }
+  </script>
+
 
 </body>
 
