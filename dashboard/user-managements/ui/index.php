@@ -72,7 +72,7 @@ include "../../../include/base-url.php";
                   </span>
                 <?php else : ?>
                   <span class="px-3 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
-                    User
+                    Kasir
                   </span>
                 <?php endif; ?>
               </td>
