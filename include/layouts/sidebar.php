@@ -39,8 +39,8 @@
 
       <!-- Laporan -->
       <li>
-        <a href="/admin/laporan.php"
-          class="flex items-center gap-3 p-3 rounded-xl transition <?php echo isActive('laporan'); ?>">
+        <a href="/toko-daffsha-kids/dashboard/reports"
+          class="flex items-center gap-3 p-3 rounded-xl transition <?php echo isActive('/toko-daffsha-kids/dashboard/reports'); ?>">
           <i data-feather="bar-chart-2" class="w-5"></i>
           <span>Laporan</span>
         </a>

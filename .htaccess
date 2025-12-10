@@ -19,6 +19,9 @@ RewriteRule ^dashboard/user-managements/edit/([0-9]+)/?$ dashboard/user-manageme
 RewriteRule ^dashboard/user-managements/update/([0-9]+)/?$ dashboard/user-managements/logic/update.php?id=$1 [L]
 RewriteRule ^dashboard/user-managements/delete/([0-9]+)/?$ dashboard/user-managements/logic/delete.php?id=$1 [L]
 
+# Jika mengakses /dashboard/reports
+RewriteRule ^dashboard/reports/?$ dashboard/reports/ui/index.php [L]
+
 # Jika user akses /kasir maka arahkan ke /kasir/ui/index.php
 RewriteRule ^kasir/?$ kasir/ui/index.php [L]
 RewriteRule ^kasir/transaction/?$ kasir/logic/transaction.php [L]

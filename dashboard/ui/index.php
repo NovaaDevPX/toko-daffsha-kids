@@ -10,6 +10,22 @@ include "../logic/index.php"; // ambil data dari logic
   <title>Dashboard Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/feather-icons"></script>
+
+  <style>
+    /* Custom gradient for modern look */
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+  </style>
 </head>
 
 <body class="bg-gray-100">
@@ -19,14 +35,12 @@ include "../logic/index.php"; // ambil data dari logic
 
   <div class="ml-64 pt-20 p-8">
     <!-- Header -->
-    <div class="bg-gradient-to-r from-blue-100 to-blue-50 p-6 rounded-xl shadow flex flex-col md:flex-row md:items-center md:justify-between mb-8 animate-fadeIn">
-      <div>
-        <h1 class="text-3xl md:text-4xl font-bold text-blue-800 mb-2 flex items-center gap-2">
-          <span>Selamat Datang, Admin</span>
-          <span class="animate-bounce">👋</span>
-        </h1>
-        <p class="text-gray-600">Hari ini <?= $formattedTanggal; ?></p>
-      </div>
+    <div class="gradient-bg text-white p-6 rounded-xl shadow-xl mb-8">
+      <h1 class="text-4xl font-bold mb-2 flex items-center gap-2">
+        <span>Selamat Datang, Admin</span>
+        <span class="animate-bounce">👋</span>
+      </h1>
+      <p class="text-lg opacity-90">Hari ini <?php echo $formattedTanggal; ?></p>
     </div>
 
     <!-- Ringkasan Statistik -->
@@ -79,32 +93,39 @@ include "../logic/index.php"; // ambil data dari logic
     </div>
 
     <!-- Transaksi Terbaru -->
-    <div class="bg-white rounded-xl shadow p-6 mb-8">
-      <h2 class="text-xl font-semibold mb-4">Transaksi Terbaru</h2>
+    <div class="bg-white p-6 rounded-xl shadow-lg card-hover mb-8">
+      <h2 class="text-2xl font-semibold mb-6 text-gray-800 flex items-center">
+        <i data-feather="list" class="mr-3 text-blue-500"></i>Transaksi Terbaru
+      </h2>
       <div class="overflow-x-auto">
         <table class="w-full table-auto border-collapse">
-          <thead>
-            <tr class="bg-gray-100 text-left text-gray-700">
-              <th class="p-3 font-semibold border-b">No</th>
-              <th class="p-3 font-semibold border-b">Tanggal</th>
-              <th class="p-3 font-semibold border-b">Kasir</th>
-              <th class="p-3 font-semibold border-b">Total</th>
-              <th class="p-3 font-semibold border-b">Metode</th>
-              <th class="p-3 font-semibold border-b">Aksi</th>
+          <thead class="bg-gradient-to-r from-gray-100 to-gray-200">
+            <tr class="text-left text-gray-700">
+              <th class="p-4 font-semibold">No</th>
+              <th class="p-4 font-semibold">Tanggal</th>
+              <th class="p-4 font-semibold">Kasir</th>
+              <th class="p-4 font-semibold">Total</th>
+              <th class="p-4 font-semibold">Metode</th>
+              <th class="p-4 font-semibold">Aksi</th>
             </tr>
           </thead>
           <tbody class="text-gray-700">
             <?php foreach ($recentTransactions as $i => $trx): ?>
               <tr class="border-b hover:bg-gray-50 transition">
-                <td class="p-3"><?= $i + 1; ?></td>
-                <td class="p-3"><?= $trx['created_at']; ?></td>
-                <td class="p-3"><?= $trx['kasir']; ?></td>
-                <td class="p-3">Rp <?= number_format($trx['total'], 0, ',', '.'); ?></td>
-                <td class="p-3"><?= ucfirst($trx['method']); ?></td>
-                <td class="p-3">
+                <td class="p-4"><?php echo $i + 1; ?></td>
+                <td class="p-4"><?php echo $trx['created_at']; ?></td>
+                <td class="p-4"><?php echo $trx['kasir']; ?></td>
+                <td class="p-4">Rp <?php echo number_format($trx['total'], 0, ',', '.'); ?></td>
+                <td class="p-4">
+                  <span class="px-3 py-1 rounded-full text-sm font-medium 
+                    <?php echo $trx['method'] == 'cash' ? 'bg-green-100 text-green-800' : ($trx['method'] == 'qris' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'); ?>">
+                    <?php echo ucfirst($trx['method']); ?>
+                  </span>
+                </td>
+                <td class="p-4">
                   <button
-                    onclick="openDetailModal(<?= $trx['id']; ?>)"
-                    class="text-blue-600 hover:underline font-medium">
+                    onclick="openDetailModal(<?php echo $trx['id']; ?>)"
+                    class="text-blue-600 hover:underline font-medium transition">
                     Detail
                   </button>
                 </td>
@@ -117,8 +138,10 @@ include "../logic/index.php"; // ambil data dari logic
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <!-- Produk Terlaris -->
-      <div class="bg-white rounded-xl shadow p-6">
-        <h2 class="text-xl font-semibold mb-4">🔥 Produk Terlaris</h2>
+      <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-800 flex items-center">
+          <i data-feather="star" class="mr-3 text-yellow-500"></i>Produk Terlaris
+        </h2>
         <div class="space-y-4">
           <?php
           // Cari total penjualan produk terlaris untuk progress bar
@@ -128,13 +151,13 @@ include "../logic/index.php"; // ambil data dari logic
             <?php
             $percentage = ($prod['total_sold'] / $maxSold) * 100;
             ?>
-            <div>
-              <div class="flex justify-between mb-1">
-                <span class="font-medium text-gray-700"><?= $prod['name']; ?></span>
-                <span class="text-sm text-gray-600"><?= $prod['total_sold']; ?> terjual</span>
+            <div class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+              <div class="flex justify-between mb-2">
+                <span class="font-medium text-gray-700"><?php echo $prod['name']; ?></span>
+                <span class="text-sm text-gray-600"><?php echo $prod['total_sold']; ?> terjual</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-3">
-                <div class="bg-green-500 h-3 rounded-full" style="width: <?= $percentage; ?>%;"></div>
+                <div class="bg-green-500 h-3 rounded-full transition-all duration-500" style="width: <?php echo $percentage; ?>%;"></div>
               </div>
             </div>
           <?php endforeach; ?>
@@ -142,22 +165,23 @@ include "../logic/index.php"; // ambil data dari logic
       </div>
 
       <!-- Produk Stok Rendah -->
-      <div class="bg-white rounded-xl shadow p-6">
-        <h2 class="text-xl font-semibold mb-4">⚠️ Produk Stok Rendah</h2>
+      <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-800 flex items-center">
+          <i data-feather="alert-triangle" class="mr-3 text-red-500"></i>Produk Stok Rendah
+        </h2>
         <div class="space-y-3">
           <?php if (count($lowStockProducts) > 0): ?>
             <?php foreach ($lowStockProducts as $prod): ?>
-              <div class="flex justify-between items-center p-3 border rounded-lg hover:bg-red-50 transition">
-                <span class="font-medium text-red-600"><?= $prod['name']; ?></span>
-                <span class="text-sm text-red-700 font-semibold"><?= $prod['stock']; ?> tersisa</span>
+              <div class="flex justify-between items-center p-4 border rounded-lg hover:bg-red-50 transition">
+                <span class="font-medium text-red-600"><?php echo $prod['name']; ?></span>
+                <span class="text-sm text-red-700 font-semibold"><?php echo $prod['stock']; ?> tersisa</span>
               </div>
             <?php endforeach; ?>
           <?php else: ?>
-            <div class="p-3 text-green-600 font-medium bg-green-50 rounded-lg text-center">Semua produk aman</div>
+            <div class="p-4 text-green-600 font-medium bg-green-50 rounded-lg text-center">Semua produk aman</div>
           <?php endif; ?>
         </div>
       </div>
-
     </div>
 
   </div>
