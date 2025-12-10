@@ -59,8 +59,6 @@
           <select name="method" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
             <option value="">Semua</option>
             <option value="cash" <?php echo $payment_method == 'cash' ? 'selected' : ''; ?>>Cash</option>
-            <option value="qris" <?php echo $payment_method == 'qris' ? 'selected' : ''; ?>>QRIS</option>
-            <option value="transfer" <?php echo $payment_method == 'transfer' ? 'selected' : ''; ?>>Transfer</option>
           </select>
         </div>
         <div class="flex items-end">
