@@ -14,43 +14,56 @@ require "../../include/base-url.php";
 
   <style>
     .fade-in {
-      animation: fadeIn 0.4s ease-out;
+      animation: fadeIn 0.5s ease-out;
     }
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(-6px);
+        transform: translateY(-10px) scale(0.95);
       }
 
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
       }
+    }
+
+    .product-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-hover:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
 
-<body class="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen">
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
 
   <?php include "../../include/layouts/notification-kasir.php"; ?>
 
-  <div class="max-w-7xl mx-auto pt-10 pb-16">
+  <div class="max-w-7xl mx-auto pt-10 pb-16 px-4">
 
-    <h1 class="text-4xl font-bold text-left text-slate-700 mb-6 tracking-tight">
-      Toko Daffsha Kids
-    </h1>
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 tracking-tight">
+        Toko Daffsha Kids
+      </h1>
+      <p class="text-lg text-gray-600 mt-2">Pilih produk dengan mudah dan cepat.</p>
+    </div>
 
-    <div class="grid grid-cols-3 gap-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
       <!-- PRODUK LIST -->
-      <div class="col-span-2 bg-white/70 backdrop-blur-lg p-8 rounded-3xl shadow-xl border border-slate-200">
+      <div class="lg:col-span-2 bg-white/90 backdrop-blur-lg p-8 rounded-3xl shadow-xl border border-gray-200 fade-in">
 
         <!-- SEARCH BAR -->
         <div class="mb-6 relative max-w-md mx-auto">
           <!-- Icon Search -->
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
@@ -59,22 +72,21 @@ require "../../include/base-url.php";
 
           <!-- Input Field -->
           <input type="text" id="searchInput" placeholder="Cari produk..."
-            class="w-full pl-10 pr-4 py-3 rounded-full border border-slate-300 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition duration-200 text-slate-700"
+            class="w-full pl-12 pr-4 py-4 rounded-full border-2 border-gray-300 bg-white shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition duration-300 text-gray-700 font-medium"
             oninput="filterProducts()">
         </div>
 
-
-        <h2 class="text-2xl font-semibold text-slate-700 mb-6">Daftar Produk</h2>
-        <div class="grid grid-cols-3 gap-6" id="productList">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6">Daftar Produk</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productList">
           <?php while ($p = $products->fetch_assoc()): ?>
             <?php if ($p['stock'] <= 0) continue; ?>
 
             <div
-              class="product-item h-full rounded-2xl p-5 bg-white border border-slate-200 shadow hover:shadow-xl transition cursor-pointer hover:scale-[1.02]"
-              data-name="<?= strtolower($p['name']) ?>"
-              onclick="addToCart(<?= $p['id'] ?>, '<?= $p['name'] ?>', <?= $p['price'] ?>)">
+              class="product-item h-full rounded-2xl p-6 bg-white border-2 border-gray-200 shadow-lg product-hover cursor-pointer fade-in"
+              data-name="<?php echo strtolower($p['name']); ?>"
+              onclick="addToCart(<?php echo $p['id']; ?>, '<?php echo $p['name']; ?>', <?php echo $p['price']; ?>)">
 
-              <div class="w-full h-28 bg-slate-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+              <div class="w-full h-32 bg-gray-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden shadow-inner">
                 <?php
                 // Path fisik di server
                 $imgPathServer = __DIR__ . '/../../uploads/products/' . basename($p['image']);
@@ -83,65 +95,74 @@ require "../../include/base-url.php";
                 ?>
 
                 <?php if ($p['image'] && file_exists($imgPathServer)): ?>
-                  <img src="<?= $imgPathUrl; ?>"
-                    alt="<?= htmlspecialchars($p['name']); ?>"
-                    class="w-full h-full object-cover rounded-xl">
+                  <img src="<?php echo $imgPathUrl; ?>"
+                    alt="<?php echo htmlspecialchars($p['name']); ?>"
+                    class="w-full h-full object-cover rounded-xl transition transform hover:scale-110">
                 <?php else: ?>
-                  <span class="text-3xl">👕</span>
+                  <span class="text-4xl text-gray-400">📦</span>
                 <?php endif; ?>
               </div>
 
-              <p class="font-semibold text-slate-700 text-lg"><?= $p['name'] ?></p>
-              <p class="text-sm text-slate-500">Rp <?= number_format($p['price']); ?></p>
-              <p class="text-xs text-slate-400" id="stock-<?= $p['id'] ?>">Stok: <?= $p['stock'] ?></p>
-
+              <p class="font-bold text-gray-800 text-lg mb-1"><?php echo $p['name']; ?></p>
+              <p class="text-lg text-blue-600 font-semibold">Rp <?php echo number_format($p['price']); ?></p>
+              <div class="flex justify-between items-center mt-2">
+                <span class="text-sm text-gray-500">Stok tersedia</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium shadow-sm" id="stock-<?php echo $p['id']; ?>">
+                  <?php echo $p['stock']; ?>
+                </span>
+              </div>
             </div>
           <?php endwhile; ?>
-
-
         </div>
       </div>
 
       <!-- KERANJANG -->
-      <div class="bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-xl border border-slate-200">
-        <h2 class="text-2xl font-semibold text-slate-700 mb-6">Keranjang</h2>
+      <div class="bg-white/90 backdrop-blur-lg p-8 rounded-3xl shadow-xl border border-gray-200 fade-in">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6">Keranjang</h2>
 
         <form action="kasir/transaction" method="POST">
-
-          <table class="w-full text-sm mb-4" id="cartTable">
-            <thead>
-              <tr class="border-b text-slate-600 font-medium">
-                <th class="text-left py-2">Barang</th>
-                <th>Qty</th>
-                <th>Harga</th>
-                <th>Sub</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-
-          <div class="mt-5">
-            <label class="font-medium text-slate-600">Total</label>
-            <input type="text" id="total" name="total" readonly
-              class="w-full mt-1 p-3 border border-slate-200 rounded-xl bg-slate-100 font-semibold text-slate-700">
+          <div class="overflow-x-auto mb-4">
+            <table class="w-full text-sm" id="cartTable">
+              <thead>
+                <tr class="border-b-2 border-gray-300 text-gray-700 font-semibold">
+                  <th class="text-left py-3">Barang</th>
+                  <th class="text-center py-3">Qty</th>
+                  <th class="text-center py-3">Harga</th>
+                  <th class="text-center py-3">Sub</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
 
-          <div class="mt-4">
-            <label class="font-medium text-slate-600">Pembayaran</label>
-            <input type="number" id="payment" name="payment"
-              oninput="hitungKembalian()"
-              class="w-full mt-1 p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-300">
-          </div>
+          <div class="mt-6 space-y-4">
+            <div>
+              <label class="font-semibold text-gray-700">Total</label>
+              <input type="text" id="total" name="total_display" readonly
+                class="w-full mt-2 p-4 border-2 border-gray-300 rounded-xl bg-gray-50 font-bold text-gray-800 shadow-inner">
+              <input type="hidden" id="total_hidden" name="total">
+            </div>
 
-          <div class="mt-4">
-            <label class="font-medium text-slate-600">Kembalian</label>
-            <input type="text" id="change" name="change" readonly
-              class="w-full mt-1 p-3 border border-slate-200 rounded-xl bg-slate-100 font-semibold text-slate-700">
+            <div>
+              <label class="font-semibold text-gray-700">Pembayaran</label>
+              <input type="text" id="payment" name="payment_display"
+                placeholder="Rp. 0"
+                oninput="formatPayment()"
+                class="w-full mt-2 p-4 border-2 border-blue-300 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition">
+              <input type="hidden" id="payment_hidden" name="payment">
+            </div>
+
+            <div>
+              <label class="font-semibold text-gray-700">Kembalian</label>
+              <input type="text" id="change" name="change_display" readonly
+                class="w-full mt-2 p-4 border-2 border-gray-300 rounded-xl bg-gray-50 font-bold text-gray-800 shadow-inner">
+              <input type="hidden" id="change_hidden" name="change">
+            </div>
           </div>
 
           <button type="button"
             onclick="confirmTransaction()"
-            class="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl shadow-lg transition font-semibold text-lg">
+            class="mt-8 w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-4 rounded-xl shadow-xl transition transform hover:scale-105 font-bold text-lg">
             Lanjutkan Transaksi
           </button>
         </form>
@@ -156,7 +177,7 @@ require "../../include/base-url.php";
     function addToCart(id, name, price) {
       let stockEl = document.getElementById(`stock-${id}`);
       if (!(id in productStock)) {
-        productStock[id] = parseInt(stockEl.textContent.replace('Stok: ', ''));
+        productStock[id] = parseInt(stockEl.textContent);
       }
 
       if (productStock[id] <= 0) {
@@ -177,7 +198,7 @@ require "../../include/base-url.php";
       }
 
       productStock[id]--;
-      stockEl.textContent = `Stok: ${productStock[id]}`;
+      stockEl.textContent = productStock[id];
 
       renderCart();
     }
@@ -198,7 +219,7 @@ require "../../include/base-url.php";
       productStock[id] -= diff;
       item.qty = qty;
 
-      stockEl.textContent = `Stok: ${productStock[id]}`;
+      stockEl.textContent = productStock[id];
       renderCart();
     }
 
@@ -212,15 +233,15 @@ require "../../include/base-url.php";
         total += sub;
 
         tbody.innerHTML += `
-        <tr class="border-b py-2">
-          <td class="py-2">${item.name}</td>
+        <tr class="border-b border-gray-200 py-3 fade-in">
+          <td class="py-3 font-medium text-gray-800">${item.name}</td>
           <td class="text-center">
             <input type="number" min="1" value="${item.qty}"
-              class="w-14 p-1 border border-slate-300 rounded-lg"
+              class="w-16 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 text-center"
               onchange="updateQty(${item.id}, this.value)">
           </td>
-          <td>Rp ${item.price.toLocaleString()}</td>
-          <td>Rp ${sub.toLocaleString()}</td>
+          <td class="text-center font-semibold text-gray-700">Rp ${item.price.toLocaleString()}</td>
+          <td class="text-center font-bold text-blue-600">Rp ${sub.toLocaleString()}</td>
         </tr>
 
         <input type="hidden" name="product_id[]" value="${item.id}">
@@ -230,15 +251,37 @@ require "../../include/base-url.php";
       `;
       });
 
-      document.getElementById("total").value = total;
+      // Update total display dan hidden
+      document.getElementById("total").value = "Rp. " + total.toLocaleString();
+      document.getElementById("total_hidden").value = total;
+
+      hitungKembalian();
+    }
+
+    function formatPayment() {
+      let input = document.getElementById("payment");
+      let hidden = document.getElementById("payment_hidden");
+      let value = input.value.replace(/[^0-9]/g, ''); // Ambil hanya angka
+
+      if (value) {
+        input.value = "Rp. " + parseInt(value).toLocaleString();
+        hidden.value = parseInt(value);
+      } else {
+        input.value = "";
+        hidden.value = "";
+      }
+
       hitungKembalian();
     }
 
     function hitungKembalian() {
-      let total = parseInt(document.getElementById("total").value) || 0;
-      let pay = parseInt(document.getElementById("payment").value) || 0;
+      let total = parseInt(document.getElementById("total_hidden").value) || 0;
+      let pay = parseInt(document.getElementById("payment_hidden").value) || 0;
       let change = pay - total;
-      document.getElementById("change").value = change >= 0 ? change : 0;
+
+      // Update change display dan hidden
+      document.getElementById("change").value = "Rp. " + (change >= 0 ? change.toLocaleString() : "0");
+      document.getElementById("change_hidden").value = change >= 0 ? change : 0;
     }
 
     // ======================
@@ -261,8 +304,8 @@ require "../../include/base-url.php";
 
   <script>
     function confirmTransaction() {
-      let total = parseInt(document.getElementById("total").value) || 0;
-      let pay = parseInt(document.getElementById("payment").value) || 0;
+      let total = parseInt(document.getElementById("total_hidden").value) || 0;
+      let pay = parseInt(document.getElementById("payment_hidden").value) || 0;
 
       if (cart.length === 0) {
         Swal.fire({
@@ -287,8 +330,8 @@ require "../../include/base-url.php";
         text: "Pastikan data sudah benar sebelum melanjutkan.",
         icon: "question",
         showCancelButton: true,
-        confirmButtonColor: "#16a34a",
-        cancelButtonColor: "#d33",
+        confirmButtonColor: "#3b82f6",
+        cancelButtonColor: "#6b7280",
         confirmButtonText: "Ya, lanjutkan!",
         cancelButtonText: "Batal"
       }).then((result) => {

@@ -92,28 +92,6 @@
           </div>
         </div>
       </div>
-      <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
-        <div class="flex items-center mb-4">
-          <div class="bg-purple-100 p-3 rounded-full">
-            <i data-feather="credit-card" class="text-purple-600"></i>
-          </div>
-          <div class="ml-4">
-            <h3 class="text-lg font-semibold text-gray-800">Total Pembayaran</h3>
-            <p class="text-3xl font-bold text-purple-600">Rp <?php echo number_format($summary['total_payment'] ?? 0); ?></p>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
-        <div class="flex items-center mb-4">
-          <div class="bg-yellow-100 p-3 rounded-full">
-            <i data-feather="trending-up" class="text-yellow-600"></i>
-          </div>
-          <div class="ml-4">
-            <h3 class="text-lg font-semibold text-gray-800">Total Kembalian</h3>
-            <p class="text-3xl font-bold text-yellow-600">Rp <?php echo number_format($summary['total_change'] ?? 0); ?></p>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Produk Terlaris -->
