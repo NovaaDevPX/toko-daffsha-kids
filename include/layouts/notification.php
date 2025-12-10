@@ -10,6 +10,8 @@ function getMessage($key)
     'updated'   => 'Data berhasil diperbarui!',
     'added'     => 'Data berhasil ditambahkan!',
     'stock_updated'  => 'Stok berhasil diperbarui!',
+    'active'  => 'Produk berhasil diaktifkan!',
+    'nonactive'  => 'Produk berhasil dinonaktifkan!',
     'deleted'   => 'Data berhasil dihapus!',
     'failed'    => 'Terjadi kesalahan, silakan coba lagi!',
     'notfound'  => 'Data tidak ditemukan!',

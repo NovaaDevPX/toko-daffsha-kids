@@ -2,4 +2,4 @@
 require "../../include/conn.php";
 
 // Ambil semua produk
-$products = $conn->query("SELECT * FROM products ORDER BY name ASC");
+$products = $result = $conn->query("SELECT * FROM products WHERE is_deleted = 0 ORDER BY name ASC");

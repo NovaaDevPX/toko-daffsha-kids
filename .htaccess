@@ -10,8 +10,13 @@ RewriteRule ^dashboard/products/store/?$ dashboard/products/logic/store.php [L]
 RewriteRule ^dashboard/products/edit/([0-9]+)/?$ dashboard/products/ui/edit.php?id=$1 [L]
 RewriteRule ^dashboard/products/update/([0-9]+)/?$ dashboard/products/logic/update.php?id=$1 [L]
 RewriteRule ^dashboard/products/delete/([0-9]+)/?$ dashboard/products/logic/delete.php?id=$1 [L]
-
 RewriteRule ^dashboard/products/edit-stock/([0-9]+)/?$ dashboard/products/ui/edit-stock.php?id=$1 [L]
+# Ubah untuk mendukung POST tanpa query string
+RewriteRule ^dashboard/products/activate/?$ dashboard/products/logic/activate.php [L]
+RewriteRule ^dashboard/products/deactivate/?$ dashboard/products/logic/deactivate.php [L]
+# Jika perlu, tetap support GET dengan id
+RewriteRule ^dashboard/products/activate/([0-9]+)/?$ dashboard/products/logic/activate.php?id=$1 [L]
+RewriteRule ^dashboard/products/deactivate/([0-9]+)/?$ dashboard/products/logic/deactivate.php?id=$1 [L]
 
 # Jika mengakses /dashboard/pengguna
 RewriteRule ^dashboard/user-managements/?$ dashboard/user-managements/ui/index.php [L]
@@ -39,3 +44,5 @@ RewriteRule ^ - [L]
 
 # Sisanya fallback ke index.php (opsional)
 RewriteRule ^ index.php [L]
+
+RewriteRule ^dashboard/products/search/?$ dashboard/products/logic/search-products.php [L]

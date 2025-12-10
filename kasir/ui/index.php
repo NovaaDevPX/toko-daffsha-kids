@@ -48,6 +48,21 @@ require "../../include/auth-kasir.php";
       right: 20px;
       z-index: 50;
     }
+
+    /* Pagination Styles */
+    .pagination-btn {
+      transition: all 0.3s ease;
+    }
+
+    .pagination-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination-active {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
   </style>
 </head>
 
@@ -88,43 +103,8 @@ require "../../include/auth-kasir.php";
         </div>
 
         <h2 class="text-3xl font-semibold text-gray-800 mb-6">Daftar Produk</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productList">
-          <?php while ($p = $products->fetch_assoc()): ?>
-            <?php if ($p['stock'] <= 0) continue; ?>
-
-            <div
-              class="product-item h-full rounded-2xl p-6 bg-white border-2 border-gray-200 shadow-lg product-hover cursor-pointer fade-in"
-              data-name="<?php echo strtolower($p['name']); ?>"
-              onclick="addToCart(<?php echo $p['id']; ?>, '<?php echo $p['name']; ?>', <?php echo $p['price']; ?>)">
-
-              <div class="w-full h-32 bg-gray-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden shadow-inner">
-                <?php
-                // Path fisik di server
-                $imgPathServer = __DIR__ . '/../../uploads/products/' . basename($p['image']);
-                // Path URL untuk <img>
-                $imgPathUrl = 'uploads/products/' . urlencode(basename($p['image']));
-                ?>
-
-                <?php if ($p['image'] && file_exists($imgPathServer)): ?>
-                  <img src="<?php echo $imgPathUrl; ?>"
-                    alt="<?php echo htmlspecialchars($p['name']); ?>"
-                    class="w-full h-full object-cover rounded-xl transition transform hover:scale-110">
-                <?php else: ?>
-                  <span class="text-4xl text-gray-400">📦</span>
-                <?php endif; ?>
-              </div>
-
-              <p class="font-bold text-gray-800 text-lg mb-1"><?php echo $p['name']; ?></p>
-              <p class="text-lg text-blue-600 font-semibold">Rp <?php echo number_format($p['price']); ?></p>
-              <div class="flex justify-between items-center mt-2">
-                <span class="text-sm text-gray-500">Stok tersedia</span>
-                <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium shadow-sm" id="stock-<?php echo $p['id']; ?>">
-                  <?php echo $p['stock']; ?>
-                </span>
-              </div>
-            </div>
-          <?php endwhile; ?>
-        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productList"></div>
+        <div id="paginationWrapper" class="mt-4"></div>
       </div>
 
       <!-- KERANJANG -->
@@ -363,6 +343,35 @@ require "../../include/auth-kasir.php";
         }
       });
     }
+
+    function loadProducts(page = 1) {
+      const search = document.getElementById("searchInput").value;
+
+      fetch(`kasir/logic/search-product-kasir.php?search=${search}&page=${page}`)
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("productList").innerHTML = html;
+
+          // Ambil pagination yang dirender
+          const pagination = document.querySelector("#pagination");
+          document.getElementById("paginationWrapper").innerHTML = "";
+
+          if (pagination) {
+            document.getElementById("paginationWrapper").appendChild(pagination);
+          }
+
+          feather.replace(); // Render ulang icon
+        });
+    }
+
+
+    // Load awal
+    loadProducts();
+
+    // Live search
+    document.getElementById("searchInput").addEventListener("input", () => {
+      loadProducts();
+    });
   </script>
 
 </body>

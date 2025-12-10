@@ -2,24 +2,20 @@
 include "../../../include/conn.php";
 include "../../../include/base-url.php";
 
-// Cek ID
 if (!isset($_GET['id'])) {
-  die("ID tidak ditemukan.");
+  header("Location: /toko-daffsha-kids/dashboard/products/");
+  exit;
 }
 
 $id = intval($_GET['id']);
 
-// Query DELETE
-$stmt = $conn->prepare("DELETE FROM products WHERE id = ?");
-$stmt->bind_param("i", $id);
+// Soft delete → tandai produk sebagai terhapus
+$query = "UPDATE products SET is_deleted = 1 WHERE id = $id";
 
-if ($stmt->execute()) {
-  // Redirect aman, tidak terpengaruh <base>
-  header("Location: /toko-daffsha-kids/dashboard/products?success=deleted");
-  exit;
+if ($conn->query($query)) {
+  // Redirect kembali ke product page
+  header("Location: /toko-daffsha-kids/dashboard/products/?deleted=success");
 } else {
-  echo "Gagal menghapus produk: " . $conn->error;
+  header("Location: /toko-daffsha-kids/dashboard/products/?deleted=failed");
 }
-
-$stmt->close();
-$conn->close();
+exit;
