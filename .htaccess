@@ -30,7 +30,7 @@ RewriteRule ^kasir/transaction/?$ kasir/logic/transaction.php [L]
 
 # Jika user akses /login maka arahkan ke /login/ui/index.php
 RewriteRule ^login/?$ login/ui/index.php [L]
-
+RewriteRule ^login/store/?$ login/logic/index.php [L]
 
 # Jika akses file aslinya / foldernya memang ada, biarkan
 RewriteCond %{REQUEST_FILENAME} -f [OR]

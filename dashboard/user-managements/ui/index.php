@@ -1,5 +1,6 @@
 <?php
 include "../../../include/base-url.php";
+include "../../../include/auth-admin.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">

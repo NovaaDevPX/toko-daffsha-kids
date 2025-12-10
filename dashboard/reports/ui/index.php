@@ -1,3 +1,6 @@
+<?php include "../../../include/auth-admin.php"; ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,7 +65,7 @@
         </div>
         <div class="flex items-end">
           <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition transform hover:scale-105 shadow-lg">
-            <i data-feather="search" class="inline mr-2"></i>Generate Laporan
+            <i data-feather="search" class="inline mr-2"></i>Filter Data
           </button>
         </div>
       </form>

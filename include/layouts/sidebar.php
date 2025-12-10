@@ -48,13 +48,12 @@
 
       <!-- Logout -->
       <li>
-        <a href="/logout.php"
+        <a href="/toko-daffsha-kids/include/logout.php"
           class="flex items-center gap-3 p-3 text-gray-600 rounded-xl hover:bg-red-100 hover:text-red-600 transition">
           <i data-feather="log-out" class="w-5"></i>
           <span>Logout</span>
         </a>
       </li>
-
     </ul>
   </nav>
 </aside>

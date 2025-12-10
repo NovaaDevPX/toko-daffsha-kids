@@ -1,6 +1,9 @@
 <?php
 require "../logic/index.php";
 require "../../include/base-url.php";
+require "../../include/auth-kasir.php";
+
+
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +39,14 @@ require "../../include/base-url.php";
     .product-hover:hover {
       transform: translateY(-5px) scale(1.05);
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Floating Logout Button */
+    .floating-logout {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 50;
     }
   </style>
 </head>
@@ -169,6 +180,18 @@ require "../../include/base-url.php";
       </div>
     </div>
   </div>
+
+  <!-- Floating Logout Button -->
+  <div class="floating-logout">
+    <a href="/toko-daffsha-kids/include/logout.php"
+      class="flex items-center justify-center w-14 h-14 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-full shadow-2xl transition-all transform hover:scale-110 hover:rotate-12">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v9m6.364-6.364a9 9 0 11-12.728 0" />
+      </svg>
+
+    </a>
+  </div>
+
 
   <script>
     let cart = [];

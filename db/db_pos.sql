@@ -62,8 +62,11 @@ CREATE TABLE transaction_items (
 
 INSERT INTO users (name, email, password, role)
 VALUES
-('Admin', 'admin@example.com', '123456', 'admin'),
-('Kasir 1', 'kasir@example.com', '123456', 'kasir');
+INSERT INTO users (name, email, password, role) VALUES
+('Admin Toko', 'admin@toko.com', MD5('admin123'), 'admin'),
+('Kasir Satu', 'kasir1@toko.com', MD5('kasir123'), 'kasir'),
+('Kasir Dua', 'kasir2@toko.com', MD5('kasir123'), 'kasir');
+
 
 INSERT INTO products (name, price, stock)
 VALUES

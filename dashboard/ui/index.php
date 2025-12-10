@@ -1,6 +1,7 @@
 <?php
 include "../../include/base-url.php";
-include "../logic/index.php"; // ambil data dari logic
+include "../logic/index.php";
+include "../../include/auth-admin.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
