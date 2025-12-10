@@ -11,6 +11,8 @@ RewriteRule ^dashboard/products/edit/([0-9]+)/?$ dashboard/products/ui/edit.php?
 RewriteRule ^dashboard/products/update/([0-9]+)/?$ dashboard/products/logic/update.php?id=$1 [L]
 RewriteRule ^dashboard/products/delete/([0-9]+)/?$ dashboard/products/logic/delete.php?id=$1 [L]
 
+RewriteRule ^dashboard/products/edit-stock/([0-9]+)/?$ dashboard/products/ui/edit-stock.php?id=$1 [L]
+
 # Jika mengakses /dashboard/pengguna
 RewriteRule ^dashboard/user-managements/?$ dashboard/user-managements/ui/index.php [L]
 RewriteRule ^dashboard/user-managements/add/?$ dashboard/user-managements/ui/add.php [L]

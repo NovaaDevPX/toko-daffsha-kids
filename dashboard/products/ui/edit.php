@@ -65,13 +65,6 @@ $product = $result->fetch_assoc();
           <input type="hidden" name="price" id="priceRaw">
         </div>
 
-        <!-- Stok -->
-        <div>
-          <label class="block mb-2 text-gray-700 font-medium">Stok</label>
-          <input type="number" name="stock" required min="0" value="<?= $product['stock']; ?>"
-            class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-        </div>
-
         <!-- Gambar -->
         <div>
           <label class="block mb-2 text-gray-700 font-medium">Gambar Produk</label>

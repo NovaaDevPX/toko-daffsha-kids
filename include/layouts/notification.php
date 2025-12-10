@@ -9,6 +9,7 @@ function getMessage($key)
   $messages = [
     'updated'   => 'Data berhasil diperbarui!',
     'added'     => 'Data berhasil ditambahkan!',
+    'stock_updated'  => 'Stok berhasil diperbarui!',
     'deleted'   => 'Data berhasil dihapus!',
     'failed'    => 'Terjadi kesalahan, silakan coba lagi!',
     'notfound'  => 'Data tidak ditemukan!',

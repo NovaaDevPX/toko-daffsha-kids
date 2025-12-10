@@ -41,15 +41,58 @@
       <p class="text-lg opacity-90">Kelola inventaris produk Anda dengan mudah.</p>
     </div>
 
-    <div class="flex items-center justify-between mb-6">
-      <div></div> <!-- Placeholder for alignment -->
+    <!-- Filter + Search + Add Button -->
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
 
+      <!-- Search + Filter -->
+      <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+
+        <!-- Search Box -->
+        <div class="relative group">
+          <span class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
+            </svg>
+          </span>
+          <input type="text" id="searchInput"
+            placeholder="Cari produk..."
+            class="w-full sm:w-72 pl-10 pr-4 py-3 rounded-xl border border-gray-300 bg-white shadow-sm
+               focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none
+               hover:shadow-md placeholder-gray-400">
+        </div>
+
+        <!-- Filter -->
+        <div class="relative group text-slate-600">
+          <select id="filterStock"
+            class="w-full sm:w-56 p-3 pr-10 rounded-xl border border-gray-300 bg-white shadow-sm
+               focus:ring-2 focus:ring-blue-500 outline-none focus:border-transparent transition-all
+               hover:shadow-md appearance-none">
+            <option value="all">Semua Produk</option>
+            <option value="available">Stok Tersedia</option>
+            <option value="out">Stok Habis</option>
+          </select>
+
+          <!-- Dropdown Icon -->
+          <span class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Add Button -->
       <a href="dashboard/products/create"
         class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition transform hover:scale-105 shadow-lg">
         <i data-feather="plus" class="w-5"></i>
-        Tambah Produk
+        Tambah Produk Baru
       </a>
+
     </div>
+
 
     <!-- Table -->
     <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
@@ -66,14 +109,16 @@
             </tr>
           </thead>
 
-          <tbody class="text-gray-700">
+          <tbody class="text-gray-700" id="productTableBody">
             <?php
             $no = 1;
             $result = $conn->query("SELECT * FROM products ORDER BY name ASC");
 
             if ($result->num_rows > 0) {
               while ($row = $result->fetch_assoc()) { ?>
-                <tr class="border-b hover:bg-gray-50 transition">
+                <tr class="border-b hover:bg-gray-50 transition product-row"
+                  data-name="<?php echo strtolower($row['name']); ?>"
+                  data-stock="<?php echo $row['stock']; ?>">
                   <td class="p-4"><?php echo $no++; ?></td>
                   <!-- Gambar -->
                   <td class="p-4">
@@ -90,9 +135,19 @@
                   <td class="p-4"><?php echo $row['name']; ?></td>
                   <td class="p-4">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?></td>
                   <td class="p-4">
-                    <span class="px-3 py-1 rounded-full text-sm font-medium 
-                      <?php echo $row['stock'] < 10 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'; ?>">
-                      <?php echo $row['stock']; ?>
+                    <?php
+                    $stock = (int)$row['stock'];
+
+                    if ($stock == 0) {
+                      $color = "bg-red-100 text-red-800";
+                    } elseif ($stock < 10) {
+                      $color = "bg-yellow-100 text-yellow-800";
+                    } else {
+                      $color = "bg-green-100 text-green-800";
+                    }
+                    ?>
+                    <span class="px-3 py-1 rounded-full text-sm font-medium <?= $color ?>">
+                      <?= $stock ?>
                     </span>
                   </td>
 
@@ -106,24 +161,30 @@
 
                     <!-- Dropdown menu -->
                     <div id="menu-<?php echo $row['id']; ?>"
-                      class="hidden absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg border z-20 transition">
+                      class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border z-20 transition">
                       <!-- Edit -->
                       <a href="dashboard/products/edit/<?php echo $row['id']; ?>"
-                        class="flex items-center gap-2 px-4 py-3 hover:bg-gray-100 text-blue-600 rounded-t-lg transition">
+                        class="flex items-center gap-2 px-4 py-3 hover:bg-gray-100 text-blue-600 transition">
                         <i data-feather="edit" class="w-4"></i> Edit
+                      </a>
+                      <!-- Update Stock -->
+                      <a href="dashboard/products/edit-stock/<?php echo $row['id']; ?>"
+                        class="flex items-center gap-2 px-4 py-3 hover:bg-gray-100 text-green-600 transition">
+                        <i data-feather="package" class="w-4"></i> Update Stock
                       </a>
                       <!-- Delete -->
                       <a href="dashboard/products/delete/<?php echo $row['id']; ?>"
                         onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')"
-                        class="flex items-center gap-2 px-4 py-3 hover:bg-gray-100 text-red-600 rounded-b-lg transition">
+                        class="flex items-center gap-2 px-4 py-3 hover:bg-gray-100 text-red-600 transition">
                         <i data-feather='trash' class='w-4'></i> Hapus
                       </a>
                     </div>
+
                   </td>
                 </tr>
               <?php }
             } else { ?>
-              <tr>
+              <tr class="product-row" data-name="" data-stock="0">
                 <td colspan="6" class="text-center py-8 text-gray-500">
                   Belum ada produk. Tambahkan produk baru.
                 </td>
@@ -151,6 +212,37 @@
         }
       });
     });
+
+    // Search and Filter Functions
+    function filterProducts() {
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      const filterValue = document.getElementById('filterStock').value;
+      const rows = document.querySelectorAll('.product-row');
+
+      rows.forEach(row => {
+        const name = row.getAttribute('data-name') || '';
+        const stock = parseInt(row.getAttribute('data-stock') || 0);
+        let show = true;
+
+        // Filter by search
+        if (!name.includes(searchQuery)) {
+          show = false;
+        }
+
+        // Filter by stock
+        if (filterValue === 'available' && stock <= 0) {
+          show = false;
+        } else if (filterValue === 'out' && stock > 0) {
+          show = false;
+        }
+
+        row.style.display = show ? '' : 'none';
+      });
+    }
+
+    // Event listeners
+    document.getElementById('searchInput').addEventListener('input', filterProducts);
+    document.getElementById('filterStock').addEventListener('change', filterProducts);
 
     feather.replace();
   </script>

@@ -17,10 +17,9 @@ $id = intval($_GET['id']);
 // Ambil data POST
 $name  = trim($_POST['name']);
 $price = intval($_POST['price']);
-$stock = intval($_POST['stock']);
 
 // Validasi sederhana
-if ($name === "" || $price <= 0 || $stock < 0) {
+if ($name === "" || $price <= 0) {
   die("Input tidak valid.");
 }
 
@@ -58,14 +57,14 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
   }
 }
 
-// Update data ke database
+// Update data ke database (tanpa stock)
 $stmt = $conn->prepare("
     UPDATE products 
-    SET name = ?, price = ?, stock = ?, image = ?
+    SET name = ?, price = ?, image = ?
     WHERE id = ?
 ");
 
-$stmt->bind_param("siisi", $name, $price, $stock, $imagePath, $id);
+$stmt->bind_param("sisi", $name, $price, $imagePath, $id);
 
 if ($stmt->execute()) {
   header("Location: /toko-daffsha-kids/dashboard/products?success=updated");
