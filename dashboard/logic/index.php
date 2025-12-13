@@ -8,25 +8,44 @@ $totalProducts = $conn->query("SELECT COUNT(*) as total FROM products")->fetch_a
 // Total Transaksi
 $totalTransactions = $conn->query("SELECT COUNT(*) as total FROM transactions")->fetch_assoc()['total'];
 
-// Total Pendapatan
-$totalRevenue = $conn->query("SELECT SUM(total) as total FROM transactions")->fetch_assoc()['total'];
-$totalRevenue = $totalRevenue ? $totalRevenue : 0; // jika null
+$totalRevenue = $conn->query("
+  SELECT SUM(total) as total 
+  FROM transactions 
+  WHERE status = 'completed'
+")->fetch_assoc()['total'];
+
+$totalRevenue = $totalRevenue ?? 0;
+
 
 // Total Users (Admin + Kasir)
 $totalUsers = $conn->query("SELECT COUNT(*) as total FROM users")->fetch_assoc()['total'];
 
-// --- Transaksi Terbaru ---
+// ================= FILTER STATUS =================
+$statusFilter = $_GET['status'] ?? 'all';
+
+$whereClause = "";
+if ($statusFilter === 'completed') {
+  $whereClause = "WHERE t.status = 'completed'";
+} elseif ($statusFilter === 'cancelled') {
+  $whereClause = "WHERE t.status = 'cancelled'";
+}
+
+// ================= QUERY TRANSAKSI =================
 $recentTransactions = [];
-$res = $conn->query("
-    SELECT t.id, t.total, t.method, t.created_at, u.name as kasir
+$sql = "
+    SELECT t.id, t.total, t.method, t.created_at, t.status, u.name as kasir
     FROM transactions t
     JOIN users u ON t.user_id = u.id
+    $whereClause
     ORDER BY t.created_at DESC
-    LIMIT 5
-");
+    LIMIT 10
+";
+
+$res = $conn->query($sql);
 while ($row = $res->fetch_assoc()) {
   $recentTransactions[] = $row;
 }
+
 
 // --- Produk Terlaris ---
 $bestSellingProducts = [];

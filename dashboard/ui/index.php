@@ -98,6 +98,36 @@ include "../../include/auth-admin.php";
       <h2 class="text-2xl font-semibold mb-6 text-gray-800 flex items-center">
         <i data-feather="list" class="mr-3 text-blue-500"></i>Transaksi Terbaru
       </h2>
+      <!-- FILTER TRANSAKSI -->
+      <div class="mb-4 flex gap-3">
+        <a href="dashboard/?status=all"
+          class="px-4 py-2 rounded-lg font-semibold transition
+    <?= (!isset($_GET['status']) || $_GET['status'] === 'all')
+      ? 'bg-blue-600 text-white'
+      : 'bg-gray-200 hover:bg-gray-300'
+    ?>">
+          Semua
+        </a>
+
+        <a href="dashboard/?status=completed"
+          class="px-4 py-2 rounded-lg font-semibold transition
+    <?= (isset($_GET['status']) && $_GET['status'] === 'completed')
+      ? 'bg-green-600 text-white'
+      : 'bg-gray-200 hover:bg-gray-300'
+    ?>">
+          Completed
+        </a>
+
+        <a href="dashboard/?status=cancelled"
+          class="px-4 py-2 rounded-lg font-semibold transition
+    <?= (isset($_GET['status']) && $_GET['status'] === 'cancelled')
+      ? 'bg-red-600 text-white'
+      : 'bg-gray-200 hover:bg-gray-300'
+    ?>">
+          Cancelled
+        </a>
+      </div>
+
       <div class="overflow-x-auto">
         <table class="w-full table-auto border-collapse">
           <thead class="bg-gradient-to-r from-gray-100 to-gray-200">
@@ -110,30 +140,71 @@ include "../../include/auth-admin.php";
               <th class="p-4 font-semibold">Aksi</th>
             </tr>
           </thead>
+
           <tbody class="text-gray-700">
             <?php foreach ($recentTransactions as $i => $trx): ?>
-              <tr class="border-b hover:bg-gray-50 transition">
-                <td class="p-4"><?php echo $i + 1; ?></td>
-                <td class="p-4"><?php echo $trx['created_at']; ?></td>
-                <td class="p-4"><?php echo $trx['kasir']; ?></td>
-                <td class="p-4">Rp <?php echo number_format($trx['total'], 0, ',', '.'); ?></td>
+              <?php
+              $isCancelled = $trx['status'] === 'cancelled';
+              ?>
+
+              <tr class="border-b transition-all ease-in-out
+        <?= $isCancelled
+                ? 'bg-red-50 text-red-700 hover:bg-red-100'
+                : 'hover:bg-gray-100'
+        ?>">
+
+                <td class="p-4 font-medium"><?= $i + 1 ?></td>
+
                 <td class="p-4">
-                  <span class="px-3 py-1 rounded-full text-sm font-medium 
-                    <?php echo $trx['method'] == 'cash' ? 'bg-green-100 text-green-800' : ($trx['method'] == 'qris' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'); ?>">
-                    <?php echo ucfirst($trx['method']); ?>
-                  </span>
+                  <?= $trx['created_at'] ?>
+                  <?php if ($isCancelled): ?>
+                    <div class="text-xs font-semibold text-red-600 mt-1">
+                      ❌ CANCELLED
+                    </div>
+                  <?php endif; ?>
                 </td>
+
+                <td class="p-4"><?= $trx['kasir'] ?></td>
+
+                <td class="p-4 font-semibold">
+                  Rp <?= number_format($trx['total'], 0, ',', '.') ?>
+                </td>
+
+                <td class="p-4">
+                  <?php if ($isCancelled): ?>
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold bg-red-200 text-red-800">
+                      Cancelled
+                    </span>
+                  <?php else: ?>
+                    <span class="px-3 py-1 rounded-full text-sm font-medium 
+              <?= $trx['method'] == 'cash'
+                      ? 'bg-green-100 text-green-800'
+                      : ($trx['method'] == 'qris'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-purple-100 text-purple-800')
+              ?>">
+                      <?= ucfirst($trx['method']) ?>
+                    </span>
+                  <?php endif; ?>
+                </td>
+
                 <td class="p-4">
                   <button
-                    onclick="openDetailModal(<?php echo $trx['id']; ?>)"
-                    class="text-blue-600 hover:underline font-medium transition">
+                    onclick="openDetailModal(<?= $trx['id']; ?>)"
+                    class="font-medium transition
+              <?= $isCancelled
+                ? 'text-red-600 hover:underline'
+                : 'text-blue-600 hover:underline'
+              ?>">
                     Detail
                   </button>
                 </td>
+
               </tr>
             <?php endforeach; ?>
           </tbody>
         </table>
+
       </div>
     </div>
 
@@ -264,20 +335,38 @@ include "../../include/auth-admin.php";
         <h3 class="text-xl font-semibold text-gray-900 mb-2">Daftar Produk</h3>
 
         <div id="itemList" class="space-y-3 max-h-64 overflow-y-auto pr-2"></div>
+        <button
+          id="cancelBtn"
+          onclick="cancelTransaction()"
+          class="mt-6 w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-bold transition">
+          Batalkan Transaksi
+        </button>
       </div>
 
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <script>
+    let currentTransactionId = null;
+
+    /* ===============================
+       OPEN DETAIL MODAL
+    =============================== */
     function openDetailModal(id) {
+      currentTransactionId = id;
+
       const modal = document.getElementById("detailModal");
       const loading = document.getElementById("modalLoading");
       const content = document.getElementById("modalContent");
+      const itemList = document.getElementById("itemList");
+      const cancelBtn = document.getElementById("cancelBtn");
 
       modal.classList.remove("hidden");
       loading.classList.remove("hidden");
       content.classList.add("hidden");
+      itemList.innerHTML = "";
 
       fetch("dashboard/logic/get-transaction.php?id=" + id)
         .then(res => res.json())
@@ -294,11 +383,11 @@ include "../../include/auth-admin.php";
           document.getElementById("trxTotal").textContent =
             "Rp " + parseInt(trx.total).toLocaleString("id-ID");
 
+          // Tampilkan produk
           let html = "";
-
           data.items.forEach(item => {
             html += `
-            <div class="border p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition shadow-sm hover:shadow-md">
+            <div class="border p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition shadow-sm">
               <div class="flex justify-between items-center">
                 <div>
                   <p class="font-semibold text-gray-800 text-lg">${item.product_name}</p>
@@ -314,12 +403,70 @@ include "../../include/auth-admin.php";
           `;
           });
 
-          document.getElementById("itemList").innerHTML = html;
+          itemList.innerHTML = html;
+
+          // Jika transaksi sudah dibatalkan
+          if (trx.status === "cancelled") {
+            cancelBtn.style.display = "none";
+          } else {
+            cancelBtn.style.display = "block";
+          }
+        })
+        .catch(() => {
+          Swal.fire("Error", "Gagal memuat data transaksi", "error");
         });
     }
 
+    /* ===============================
+       CLOSE MODAL
+    =============================== */
     function closeDetailModal() {
       document.getElementById("detailModal").classList.add("hidden");
+    }
+
+    /* ===============================
+       CANCEL TRANSACTION
+    =============================== */
+    function cancelTransaction() {
+      if (!currentTransactionId) return;
+
+      Swal.fire({
+        title: "Batalkan transaksi?",
+        text: "Stok barang akan dikembalikan!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc2626",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Ya, batalkan",
+        cancelButtonText: "Tidak"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch("dashboard/logic/cancel-transaction.php", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              },
+              body: "id=" + currentTransactionId
+            })
+            .then(res => res.json())
+            .then(res => {
+              if (res.success) {
+                Swal.fire({
+                  title: "Berhasil!",
+                  text: "Transaksi berhasil dibatalkan",
+                  icon: "success"
+                }).then(() => {
+                  location.reload();
+                });
+              } else {
+                Swal.fire("Gagal!", res.message, "error");
+              }
+            })
+            .catch(() => {
+              Swal.fire("Error", "Terjadi kesalahan server", "error");
+            });
+        }
+      });
     }
   </script>
 

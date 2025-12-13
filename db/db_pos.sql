@@ -206,6 +206,10 @@ ALTER TABLE `transactions`
 ALTER TABLE `transaction_items`
   ADD CONSTRAINT `transaction_items_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`),
   ADD CONSTRAINT `transaction_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+
+  ALTER TABLE transactions 
+ADD COLUMN status ENUM('completed','cancelled') DEFAULT 'completed';
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
