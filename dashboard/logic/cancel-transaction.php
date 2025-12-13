@@ -31,7 +31,6 @@ $items = $conn->query("
   WHERE transaction_id = $id
 ");
 
-// TRANSACTION DB (AMAN)
 $conn->begin_transaction();
 
 try {
