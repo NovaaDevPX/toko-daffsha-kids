@@ -3,6 +3,10 @@
 $success = isset($_GET['success']) ? $_GET['success'] : null;
 $error   = isset($_GET['error']) ? $_GET['error'] : null;
 
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
 // Fungsi ubah kode menjadi pesan khusus kasir
 function getCashierMessage($key)
 {
@@ -76,6 +80,19 @@ function getCashierMessage($key)
     showCashierNotification("<?= getCashierMessage($error); ?>", 'error');
   <?php endif; ?>
 </script>
+
+<?php if (isset($_SESSION['success']) && $_SESSION['success'] === 'struk'): ?>
+  <script>
+    Swal.fire({
+      icon: 'success',
+      title: 'Transaksi Berhasil!',
+      text: 'Struk berhasil diunduh.',
+      timer: 2500,
+      showConfirmButton: false
+    });
+  </script>
+<?php unset($_SESSION['success']);
+endif; ?>
 
 <style>
   .notif-success {

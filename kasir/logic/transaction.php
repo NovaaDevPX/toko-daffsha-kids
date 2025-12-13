@@ -1,91 +1,61 @@
-
-
 <?php
 require "../../include/conn.php";
-require "../../include/base-url.php";
 
-// Pastikan form di-submit
+header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  header("Location: ../ui/index.php");
+  echo json_encode(['status' => 'error']);
   exit;
 }
 
-// Ambil data utama transaksi
-$total      = $_POST['total'];
-$payment    = $_POST['payment'];
-$change     = $_POST['change'];
-
-// Untuk sekarang user_id kita buat static (nanti bisa pakai session)
+$total   = $_POST['total'];
+$payment = $_POST['payment'];
+$change  = $_POST['change'];
 $user_id = 1;
 
-// Validasi sederhana
 if ($total <= 0 || empty($_POST['product_id'])) {
-  header("Location: ../ui/index.php?error=transaction_failed");
+  echo json_encode(['status' => 'error']);
   exit;
 }
 
-// ===============================
-// 1. Simpan transaksi utama
-// ===============================
-$sql = "INSERT INTO transactions (user_id, total, payment, change_money, method)
-        VALUES ($user_id, $total, $payment, $change, 'cash')";
+/* ===============================
+   SIMPAN TRANSAKSI
+================================ */
+$conn->query("
+  INSERT INTO transactions (user_id, total, payment, change_money, method)
+  VALUES ($user_id, $total, $payment, $change, 'cash')
+");
 
-if (!$conn->query($sql)) {
-  header("Location: ../ui/index.php?error=transaction_failed");
-  exit;
-}
-
-// Ambil ID transaksi baru
 $transaction_id = $conn->insert_id;
 
-// ===============================
-// 2. Simpan item transaksi & kurangi stok
-// ===============================
+/* ===============================
+   ITEM TRANSAKSI
+================================ */
 $product_ids = $_POST['product_id'];
 $qtys        = $_POST['qty'];
 $prices      = $_POST['price'];
-$subtotals   = $_POST['subtotal'];
+$subs        = $_POST['subtotal'];
 
-// Loop untuk tiap item
 for ($i = 0; $i < count($product_ids); $i++) {
+  $pid = $product_ids[$i];
+  $qty = $qtys[$i];
 
-  $pid  = $product_ids[$i];
-  $qty  = $qtys[$i];
-  $price = $prices[$i];
-  $sub  = $subtotals[$i];
-
-  // Cek stok dulu
-  $res = $conn->query("SELECT stock FROM products WHERE id = $pid");
-  if (!$res || $res->num_rows == 0) {
-    header("Location: ../ui/index.php?error=transaction_failed");
+  $stok = $conn->query("SELECT stock FROM products WHERE id=$pid")->fetch_assoc();
+  if ($qty > $stok['stock']) {
+    echo json_encode(['status' => 'stock_low']);
     exit;
   }
 
-  $product = $res->fetch_assoc();
-  if ($qty > $product['stock']) {
-    header("Location: ../ui/index.php?error=stock_low");
-    exit;
-  }
+  $conn->query("
+    INSERT INTO transaction_items (transaction_id, product_id, qty, price, subtotal)
+    VALUES ($transaction_id, $pid, $qty, {$prices[$i]}, {$subs[$i]})
+  ");
 
-  // Simpan ke transaction_items
-  $sql_item = "INSERT INTO transaction_items (transaction_id, product_id, qty, price, subtotal)
-                 VALUES ($transaction_id, $pid, $qty, $price, $sub)";
-
-  if (!$conn->query($sql_item)) {
-    header("Location: ../ui/index.php?error=transaction_failed");
-    exit;
-  }
-
-  // Kurangi stok produk
-  $sql_stok = "UPDATE products SET stock = stock - $qty WHERE id = $pid";
-  if (!$conn->query($sql_stok)) {
-    header("Location: ../ui/index.php?error=transaction_failed");
-    exit;
-  }
+  $conn->query("UPDATE products SET stock = stock - $qty WHERE id=$pid");
 }
 
-// ===============================
-// 3. Redirect sukses
-// ===============================
-header("Location: /toko-daffsha-kids/kasir?success=transaction_success");
+echo json_encode([
+  'status' => 'success',
+  'transaction_id' => $transaction_id
+]);
 exit;
