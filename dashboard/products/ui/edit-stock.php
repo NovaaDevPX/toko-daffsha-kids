@@ -4,8 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Update Stok Produk</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
+  <?php include __DIR__ . '/../../../include/module.php'; ?>
   <?php include "../../../include/layouts/notification.php"; ?>
   <?php include "../logic/update-stock.php"; ?>
   <style>

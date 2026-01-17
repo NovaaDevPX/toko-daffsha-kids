@@ -9,8 +9,7 @@ include "../../include/auth-admin.php";
 <head>
   <meta charset="UTF-8">
   <title>Dashboard Admin</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
+  <?php include __DIR__ . '/../../include/module.php'; ?>
 
   <style>
     /* Custom gradient for modern look */

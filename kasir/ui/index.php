@@ -12,8 +12,8 @@
   <head>
     <meta charset="UTF-8">
     <title>Kasir - Toko Daffsha Kids</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <?php include __DIR__ . '/../../include/module.php'; ?>
 
     <style>
       .fade-in {

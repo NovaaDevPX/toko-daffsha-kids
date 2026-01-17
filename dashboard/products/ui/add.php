@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Tambah Produk</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
+  <?php require_once __DIR__ . '/../../../include/bootstrap.php'; ?>
+  <?php include __DIR__ . '/../../../include/module.php'; ?>
 
   <?php include "../../../include/base-url.php"; ?>
   <?php include "../../../include/layouts/notification.php"; ?>

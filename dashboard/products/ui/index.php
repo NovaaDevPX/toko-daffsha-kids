@@ -6,8 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Kelola Produk</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
+  <?php include __DIR__ . '/../../../include/module.php'; ?>
 
   <?php include "../../../include/base-url.php"; ?>
   <?php include "../../../include/layouts/notification.php"; ?>
