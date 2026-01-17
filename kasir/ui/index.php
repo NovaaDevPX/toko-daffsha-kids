@@ -157,17 +157,84 @@
       </div>
     </div>
 
-    <!-- Floating Logout Button -->
-    <div class="floating-logout">
-      <a href="/toko-daffsha-kids/include/logout.php"
-        class="flex items-center justify-center w-14 h-14 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-full shadow-2xl transition-all transform hover:scale-110 hover:rotate-12">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v9m6.364-6.364a9 9 0 11-12.728 0" />
-        </svg>
+    <!-- Floating Action Menu -->
+    <div id="fabWrapper" style="
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+">
 
-      </a>
+      <!-- MENU -->
+      <div id="fabMenu" style="
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 12px;
+    gap: 10px;
+  ">
+
+        <a href="<?= $baseUrl ?>/kasir/ui/history.php" style="
+      background: white;
+      color: #1f2937;
+      padding: 10px 16px;
+      border-radius: 9999px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.15);
+      font-weight: 600;
+      text-decoration: none;
+    ">
+          History Transaksi
+        </a>
+
+        <a href="/toko-daffsha-kids/include/logout.php" style="
+      background: #ef4444;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 9999px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.15);
+      font-weight: 600;
+      text-decoration: none;
+    ">
+          Logout
+        </a>
+      </div>
+
+      <!-- BUTTON -->
+      <button id="fabToggle" style="
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#3b82f6,#2563eb);
+    color: white;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 15px 30px rgba(0,0,0,.3);
+  ">
+        +
+      </button>
     </div>
 
+
+    <script>
+      const btn = document.getElementById('fabToggle');
+      const menu = document.getElementById('fabMenu');
+
+      let open = false;
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        open = !open;
+        menu.style.display = open ? 'flex' : 'none';
+        btn.textContent = open ? '×' : '+';
+      });
+
+      document.addEventListener('click', () => {
+        open = false;
+        menu.style.display = 'none';
+        btn.textContent = '+';
+      });
+    </script>
 
     <script>
       let cart = [];
@@ -387,6 +454,7 @@
         loadProducts();
       });
     </script>
+
     <iframe id="printFrame" style="display:none;"></iframe>
 
   </body>

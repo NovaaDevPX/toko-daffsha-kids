@@ -1,20 +1,36 @@
 <?php
+session_start();
 require "../../include/conn.php";
 
 header('Content-Type: application/json');
 
+/* ===============================
+   CEK METHOD
+================================ */
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  echo json_encode(['status' => 'error']);
+  echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
   exit;
 }
 
-$total   = $_POST['total'];
-$payment = $_POST['payment'];
-$change  = $_POST['change'];
-$user_id = 1;
+/* ===============================
+   CEK LOGIN
+================================ */
+if (!isset($_SESSION['user_id'])) {
+  echo json_encode(['status' => 'unauthorized']);
+  exit;
+}
+
+$user_id = (int) $_SESSION['user_id'];
+
+/* ===============================
+   AMBIL DATA
+================================ */
+$total   = (int) $_POST['total'];
+$payment = (int) $_POST['payment'];
+$change  = (int) $_POST['change'];
 
 if ($total <= 0 || empty($_POST['product_id'])) {
-  echo json_encode(['status' => 'error']);
+  echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
   exit;
 }
 
@@ -37,21 +53,34 @@ $prices      = $_POST['price'];
 $subs        = $_POST['subtotal'];
 
 for ($i = 0; $i < count($product_ids); $i++) {
-  $pid = $product_ids[$i];
-  $qty = $qtys[$i];
 
-  $stok = $conn->query("SELECT stock FROM products WHERE id=$pid")->fetch_assoc();
+  $pid = (int) $product_ids[$i];
+  $qty = (int) $qtys[$i];
+
+  // Cek stok
+  $stok = $conn->query("
+    SELECT stock FROM products WHERE id = $pid
+  ")->fetch_assoc();
+
   if ($qty > $stok['stock']) {
     echo json_encode(['status' => 'stock_low']);
     exit;
   }
 
+  // Simpan item transaksi
   $conn->query("
-    INSERT INTO transaction_items (transaction_id, product_id, qty, price, subtotal)
-    VALUES ($transaction_id, $pid, $qty, {$prices[$i]}, {$subs[$i]})
+    INSERT INTO transaction_items
+    (transaction_id, product_id, qty, price, subtotal)
+    VALUES
+    ($transaction_id, $pid, $qty, {$prices[$i]}, {$subs[$i]})
   ");
 
-  $conn->query("UPDATE products SET stock = stock - $qty WHERE id=$pid");
+  // Kurangi stok
+  $conn->query("
+    UPDATE products
+    SET stock = stock - $qty
+    WHERE id = $pid
+  ");
 }
 
 echo json_encode([
