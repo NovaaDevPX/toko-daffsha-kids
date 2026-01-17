@@ -1,5 +1,4 @@
 <?php
-include "../../../include/base-url.php";
 include "../../../include/auth-admin.php";
 ?>
 <!DOCTYPE html>
@@ -8,8 +7,7 @@ include "../../../include/auth-admin.php";
 <head>
   <meta charset="UTF-8">
   <title>Dashboard Admin</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
+  <?php include __DIR__ . '/../../../include/module.php'; ?>
 
   <?php include "../../../include/layouts/notification.php"; ?>
   <style>

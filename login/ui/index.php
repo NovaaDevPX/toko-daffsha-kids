@@ -22,8 +22,7 @@ unset($_SESSION['login_error']);
 <head>
   <meta charset="UTF-8">
   <title>Login Kasir</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
+  <?php include __DIR__ . '/../../include/module.php'; ?>
   <style>
     .fade-in {
       animation: fadeIn 0.8s ease-out;
@@ -84,7 +83,8 @@ unset($_SESSION['login_error']);
     <?php endif; ?>
 
     <!-- Form Login -->
-    <form action="store" method="POST" class="space-y-5">
+    <form action="/toko-daffsha-kids/login/store" method="POST" class="space-y-5">
+
       <div>
         <label class="block text-gray-700 mb-2 font-semibold flex items-center gap-2">
           <i data-feather="mail" class="w-4 h-4 text-blue-500"></i> Email

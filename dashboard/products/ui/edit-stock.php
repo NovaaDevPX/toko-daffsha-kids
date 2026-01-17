@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Update Stok Produk</title>
+  <?php require_once __DIR__ . '/../../../include/bootstrap.php'; ?>
   <?php include __DIR__ . '/../../../include/module.php'; ?>
+
   <?php include "../../../include/layouts/notification.php"; ?>
   <?php include "../logic/update-stock.php"; ?>
   <style>

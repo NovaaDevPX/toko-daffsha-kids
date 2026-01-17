@@ -1,9 +1,6 @@
   <?php
   require "../logic/index.php";
-  require "../../include/base-url.php";
   require "../../include/auth-kasir.php";
-
-
   ?>
 
   <!DOCTYPE html>
@@ -12,7 +9,6 @@
   <head>
     <meta charset="UTF-8">
     <title>Kasir - Toko Daffsha Kids</title>
-
     <?php include __DIR__ . '/../../include/module.php'; ?>
 
     <style>

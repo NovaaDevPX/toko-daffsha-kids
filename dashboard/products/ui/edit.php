@@ -21,8 +21,8 @@ $product = $result->fetch_assoc();
 <head>
   <meta charset="UTF-8">
   <title>Edit Produk</title>
+  <?php require_once __DIR__ . '/../../../include/bootstrap.php'; ?>
   <?php include __DIR__ . '/../../../include/module.php'; ?>
-
 
   <?php include "../../../include/layouts/notification.php"; ?>
 </head>
