@@ -62,30 +62,31 @@
     </style>
   </head>
 
-  <body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+  <body class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
 
     <?php include "../../include/layouts/notification-kasir.php"; ?>
 
-    <div class="max-w-7xl mx-auto pt-10 pb-16 px-4">
+    <div class="px-4 pt-10 pb-16 mx-auto max-w-7xl">
 
       <!-- Header -->
-      <div class="text-center mb-8">
-        <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 tracking-tight">
-          Toko Daffsha Kids
-        </h1>
-        <p class="text-lg text-gray-600 mt-2">Pilih produk dengan mudah dan cepat.</p>
+      <div class="mb-8 text-center">
+        <img
+          src="/toko-daffsha-kids/assets/img/logo.png"
+          alt="Toko Daffsha Kids"
+          class="object-contain mx-auto w-96 sm:w-48 md:w-56">
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 
         <!-- PRODUK LIST -->
-        <div class="lg:col-span-2 bg-white/90 backdrop-blur-lg p-8 rounded-3xl shadow-xl border border-gray-200 fade-in">
+        <div class="p-8 border border-gray-200 shadow-xl lg:col-span-2 bg-white/90 backdrop-blur-lg rounded-3xl fade-in">
 
           <!-- SEARCH BAR -->
-          <div class="mb-6 relative max-w-md mx-auto">
+          <div class="relative max-w-md mx-auto mb-6">
             <!-- Icon Search -->
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+              <svg class="w-6 h-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
@@ -94,28 +95,29 @@
 
             <!-- Input Field -->
             <input type="text" id="searchInput" placeholder="Cari produk..."
-              class="w-full pl-12 pr-4 py-4 rounded-full border-2 border-gray-300 bg-white shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition duration-300 text-gray-700 font-medium"
+              class="w-full py-4 pl-12 pr-4 font-medium text-gray-700 transition duration-300 bg-white border-2 border-gray-300 rounded-full shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
               oninput="filterProducts()">
           </div>
 
-          <h2 class="text-3xl font-semibold text-gray-800 mb-6">Daftar Produk</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productList"></div>
+          <h2 class="mb-6 text-3xl font-semibold text-gray-800">Daftar Produk</h2>
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" id="productList"></div>
           <div id="paginationWrapper" class="mt-4"></div>
         </div>
 
         <!-- KERANJANG -->
-        <div class="bg-white/90 backdrop-blur-lg p-8 rounded-3xl shadow-xl border border-gray-200 fade-in">
-          <h2 class="text-3xl font-semibold text-gray-800 mb-6">Keranjang</h2>
+        <div class="p-8 border border-gray-200 shadow-xl bg-white/90 backdrop-blur-lg rounded-3xl fade-in">
+          <h2 class="mb-6 text-3xl font-semibold text-gray-800">Keranjang</h2>
 
           <form id="transactionForm">
-            <div class="overflow-x-auto mb-4">
+            <div class="mb-4 overflow-x-auto">
               <table class="w-full text-sm" id="cartTable">
                 <thead>
-                  <tr class="border-b-2 border-gray-300 text-gray-700 font-semibold">
-                    <th class="text-left py-3">Barang</th>
-                    <th class="text-center py-3">Qty</th>
-                    <th class="text-center py-3">Harga</th>
-                    <th class="text-center py-3">Sub</th>
+                  <tr class="font-semibold text-gray-700 border-b-2 border-gray-300">
+                    <th class="py-3 text-left">Barang</th>
+                    <th class="py-3 text-center">Qty</th>
+                    <th class="py-3 text-center">Harga</th>
+                    <th class="py-3 text-center">Sub</th>
+                    <th class="py-3 text-center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody></tbody>
@@ -126,7 +128,7 @@
               <div>
                 <label class="font-semibold text-gray-700">Total</label>
                 <input type="text" id="total" name="total_display" readonly
-                  class="w-full mt-2 p-4 border-2 border-gray-300 rounded-xl bg-gray-50 font-bold text-gray-800 shadow-inner">
+                  class="w-full p-4 mt-2 font-bold text-gray-800 border-2 border-gray-300 shadow-inner rounded-xl bg-gray-50">
                 <input type="hidden" id="total_hidden" name="total">
               </div>
 
@@ -135,21 +137,21 @@
                 <input type="text" id="payment" name="payment_display"
                   placeholder="Rp. 0"
                   oninput="formatPayment()"
-                  class="w-full mt-2 p-4 border-2 border-blue-300 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition">
+                  class="w-full p-4 mt-2 transition border-2 border-blue-300 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400">
                 <input type="hidden" id="payment_hidden" name="payment">
               </div>
 
               <div>
                 <label class="font-semibold text-gray-700">Kembalian</label>
                 <input type="text" id="change" name="change_display" readonly
-                  class="w-full mt-2 p-4 border-2 border-gray-300 rounded-xl bg-gray-50 font-bold text-gray-800 shadow-inner">
+                  class="w-full p-4 mt-2 font-bold text-gray-800 border-2 border-gray-300 shadow-inner rounded-xl bg-gray-50">
                 <input type="hidden" id="change_hidden" name="change">
               </div>
             </div>
 
             <button type="button"
               onclick="confirmTransaction()"
-              class="mt-8 w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-4 rounded-xl shadow-xl transition transform hover:scale-105 font-bold text-lg">
+              class="w-full py-4 mt-8 text-lg font-bold text-white transition transform shadow-xl bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-xl hover:scale-105">
               Lanjutkan Transaksi
             </button>
           </form>
@@ -299,22 +301,38 @@
           total += sub;
 
           tbody.innerHTML += `
-        <tr class="border-b border-gray-200 py-3 fade-in">
-          <td class="py-3 font-medium text-gray-800">${item.name}</td>
-          <td class="text-center">
-            <input type="number" min="1" value="${item.qty}"
-              class="w-16 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 text-center"
-              onchange="updateQty(${item.id}, this.value)">
-          </td>
-          <td class="text-center font-semibold text-gray-700">Rp ${item.price.toLocaleString()}</td>
-          <td class="text-center font-bold text-blue-600">Rp ${sub.toLocaleString()}</td>
-        </tr>
+  <tr class="py-3 border-b border-gray-200 fade-in">
+    <td class="py-3 font-medium text-gray-800">${item.name}</td>
 
-        <input type="hidden" name="product_id[]" value="${item.id}">
-        <input type="hidden" name="qty[]" value="${item.qty}">
-        <input type="hidden" name="price[]" value="${item.price}">
-        <input type="hidden" name="subtotal[]" value="${sub}">
-      `;
+    <td class="text-center">
+      <input type="number" min="1" value="${item.qty}"
+        class="w-16 p-2 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200"
+        onchange="updateQty(${item.id}, this.value)">
+    </td>
+
+    <td class="font-semibold text-center text-gray-700">
+      Rp ${item.price.toLocaleString()}
+    </td>
+
+    <td class="font-bold text-center text-blue-600">
+      Rp ${sub.toLocaleString()}
+    </td>
+
+    <td class="text-center">
+      <button
+        type="button"
+        onclick="removeFromCart(${item.id})"
+        class="px-3 py-1 transition bg-red-500 rounded-lg shadow text-red hover:bg-red-600">
+        ✕
+      </button>
+    </td>
+  </tr>
+
+  <input type="hidden" name="product_id[]" value="${item.id}">
+  <input type="hidden" name="qty[]" value="${item.qty}">
+  <input type="hidden" name="price[]" value="${item.price}">
+  <input type="hidden" name="subtotal[]" value="${sub}">
+`;
         });
 
         // Update total display dan hidden
@@ -323,6 +341,32 @@
 
         hitungKembalian();
       }
+
+      function removeFromCart(id) {
+        Swal.fire({
+          title: 'Hapus barang?',
+          text: 'Barang akan dihapus dari keranjang',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Ya, hapus',
+          cancelButtonText: 'Batal'
+        }).then((result) => {
+          if (!result.isConfirmed) return;
+
+          const index = cart.findIndex(item => item.id === id);
+          if (index === -1) return;
+
+          const item = cart[index];
+          productStock[id] += item.qty;
+
+          const stockEl = document.getElementById(`stock-${id}`);
+          if (stockEl) stockEl.textContent = productStock[id];
+
+          cart.splice(index, 1);
+          renderCart();
+        });
+      }
+
 
       function formatPayment() {
         let input = document.getElementById("payment");

@@ -86,14 +86,18 @@ ob_start();
       TOKO DAFFSHA KIDS
     </div>
     <div class="center">
-      Jl. Contoh Alamat No. 12<br>
-      Telp: 08xxxxxxxx
+      Tanah Abang Blok A Lantai 6 Los B No.110-112<br>
+      Telp: +62 812-8073-1615
     </div>
 
     <div class="line"></div>
 
     <!-- INFO -->
     <table>
+      <tr>
+        <td>ID Transaksi</td>
+        <td class="right">#<?= $trx['id'] ?></td>
+      </tr>
       <tr>
         <td>Tanggal</td>
         <td class="right"><?= date('d-m-Y H:i', strtotime($trx['created_at'])) ?></td>
